@@ -112,14 +112,19 @@ Partial Class Contactos
         Me.BtnAgregarNumeroTelefono = New System.Windows.Forms.Button()
         Me.BtnAgregarCorreo = New System.Windows.Forms.Button()
         Me.DTNumerosTelefono = New System.Windows.Forms.DataGridView()
-        Me.NumeroTelefono = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DTCorreos = New System.Windows.Forms.DataGridView()
-        Me.Correo = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.BtnEliminarCorreo = New System.Windows.Forms.Button()
         Me.BtnEliminarNumeroTelefono = New System.Windows.Forms.Button()
         Me.BtnSalir = New System.Windows.Forms.Button()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.BtnLimpiarCampos = New System.Windows.Forms.Button()
+        Me.BtnModificarNumeroTelefono = New System.Windows.Forms.Button()
+        Me.BtnModificarCorreo = New System.Windows.Forms.Button()
+        Me.Label34 = New System.Windows.Forms.Label()
+        Me.IdCorreo = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Correo = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.IdNumeroTelefono = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.NumeroTelefono = New System.Windows.Forms.DataGridViewTextBoxColumn()
         CType(Me.DTContactos, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.DTNumerosTelefono, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.DTCorreos, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -130,9 +135,9 @@ Partial Class Contactos
         '
         Me.DTContactos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DTContactos.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.IdContacto, Me.NombreCompleto, Me.Apellidos, Me.FechaRegistro, Me.FechaModificacion, Me.NombreCategoria, Me.Calle, Me.NumeroInterior, Me.NumeroExterior, Me.Colonia, Me.Localidad, Me.Municipio, Me.Estado, Me.CodigoPostal, Me.TipoDireccion, Me.MontoCredito, Me.DiasCredito, Me.RegimenFiscalCliente, Me.Curp, Me.Puesto, Me.Sueldo, Me.Descripcion, Me.RegimenFiscalProveedor, Me.FechaEntregaMercancia})
-        Me.DTContactos.Location = New System.Drawing.Point(11, 540)
+        Me.DTContactos.Location = New System.Drawing.Point(12, 554)
         Me.DTContactos.Name = "DTContactos"
-        Me.DTContactos.Size = New System.Drawing.Size(1281, 309)
+        Me.DTContactos.Size = New System.Drawing.Size(1281, 324)
         Me.DTContactos.TabIndex = 0
         '
         'IdContacto
@@ -796,6 +801,7 @@ Partial Class Contactos
         '
         Me.TxtNumeroTelefono.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.TxtNumeroTelefono.Location = New System.Drawing.Point(489, 137)
+        Me.TxtNumeroTelefono.MaxLength = 10
         Me.TxtNumeroTelefono.Name = "TxtNumeroTelefono"
         Me.TxtNumeroTelefono.Size = New System.Drawing.Size(186, 23)
         Me.TxtNumeroTelefono.TabIndex = 55
@@ -854,6 +860,7 @@ Partial Class Contactos
         Me.BtnAgregarNumeroTelefono.BackColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(167, Byte), Integer), CType(CType(69, Byte), Integer))
         Me.BtnAgregarNumeroTelefono.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(167, Byte), Integer), CType(CType(69, Byte), Integer))
         Me.BtnAgregarNumeroTelefono.FlatStyle = System.Windows.Forms.FlatStyle.Popup
+        Me.BtnAgregarNumeroTelefono.ForeColor = System.Drawing.Color.White
         Me.BtnAgregarNumeroTelefono.Location = New System.Drawing.Point(899, 137)
         Me.BtnAgregarNumeroTelefono.Name = "BtnAgregarNumeroTelefono"
         Me.BtnAgregarNumeroTelefono.Size = New System.Drawing.Size(175, 25)
@@ -866,6 +873,7 @@ Partial Class Contactos
         Me.BtnAgregarCorreo.BackColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(167, Byte), Integer), CType(CType(69, Byte), Integer))
         Me.BtnAgregarCorreo.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(167, Byte), Integer), CType(CType(69, Byte), Integer))
         Me.BtnAgregarCorreo.FlatStyle = System.Windows.Forms.FlatStyle.Popup
+        Me.BtnAgregarCorreo.ForeColor = System.Drawing.Color.White
         Me.BtnAgregarCorreo.Location = New System.Drawing.Point(899, 183)
         Me.BtnAgregarCorreo.Name = "BtnAgregarCorreo"
         Me.BtnAgregarCorreo.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -877,32 +885,20 @@ Partial Class Contactos
         'DTNumerosTelefono
         '
         Me.DTNumerosTelefono.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DTNumerosTelefono.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.NumeroTelefono})
+        Me.DTNumerosTelefono.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.IdNumeroTelefono, Me.NumeroTelefono})
         Me.DTNumerosTelefono.Location = New System.Drawing.Point(489, 229)
         Me.DTNumerosTelefono.Name = "DTNumerosTelefono"
         Me.DTNumerosTelefono.Size = New System.Drawing.Size(186, 109)
         Me.DTNumerosTelefono.TabIndex = 63
         '
-        'NumeroTelefono
-        '
-        Me.NumeroTelefono.HeaderText = "Número de Teléfono"
-        Me.NumeroTelefono.Name = "NumeroTelefono"
-        Me.NumeroTelefono.Width = 140
-        '
         'DTCorreos
         '
         Me.DTCorreos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DTCorreos.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Correo})
+        Me.DTCorreos.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.IdCorreo, Me.Correo})
         Me.DTCorreos.Location = New System.Drawing.Point(694, 229)
         Me.DTCorreos.Name = "DTCorreos"
         Me.DTCorreos.Size = New System.Drawing.Size(189, 109)
         Me.DTCorreos.TabIndex = 64
-        '
-        'Correo
-        '
-        Me.Correo.HeaderText = "Correo"
-        Me.Correo.Name = "Correo"
-        Me.Correo.Width = 140
         '
         'BtnEliminarCorreo
         '
@@ -946,7 +942,7 @@ Partial Class Contactos
         'PictureBox1
         '
         Me.PictureBox1.Image = CType(resources.GetObject("PictureBox1.Image"), System.Drawing.Image)
-        Me.PictureBox1.Location = New System.Drawing.Point(1096, 16)
+        Me.PictureBox1.Location = New System.Drawing.Point(1096, -3)
         Me.PictureBox1.Name = "PictureBox1"
         Me.PictureBox1.Size = New System.Drawing.Size(115, 117)
         Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -966,12 +962,73 @@ Partial Class Contactos
         Me.BtnLimpiarCampos.Text = "Limpiar Campos"
         Me.BtnLimpiarCampos.UseVisualStyleBackColor = False
         '
+        'BtnModificarNumeroTelefono
+        '
+        Me.BtnModificarNumeroTelefono.BackColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(123, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.BtnModificarNumeroTelefono.FlatStyle = System.Windows.Forms.FlatStyle.Popup
+        Me.BtnModificarNumeroTelefono.ForeColor = System.Drawing.Color.White
+        Me.BtnModificarNumeroTelefono.Location = New System.Drawing.Point(1096, 136)
+        Me.BtnModificarNumeroTelefono.Name = "BtnModificarNumeroTelefono"
+        Me.BtnModificarNumeroTelefono.Size = New System.Drawing.Size(175, 26)
+        Me.BtnModificarNumeroTelefono.TabIndex = 70
+        Me.BtnModificarNumeroTelefono.Text = "Modificar Número"
+        Me.BtnModificarNumeroTelefono.UseVisualStyleBackColor = False
+        '
+        'BtnModificarCorreo
+        '
+        Me.BtnModificarCorreo.BackColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(123, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.BtnModificarCorreo.FlatStyle = System.Windows.Forms.FlatStyle.Popup
+        Me.BtnModificarCorreo.ForeColor = System.Drawing.Color.White
+        Me.BtnModificarCorreo.Location = New System.Drawing.Point(1096, 183)
+        Me.BtnModificarCorreo.Name = "BtnModificarCorreo"
+        Me.BtnModificarCorreo.Size = New System.Drawing.Size(175, 26)
+        Me.BtnModificarCorreo.TabIndex = 71
+        Me.BtnModificarCorreo.Text = "Modificar correo"
+        Me.BtnModificarCorreo.UseVisualStyleBackColor = False
+        '
+        'Label34
+        '
+        Me.Label34.AutoSize = True
+        Me.Label34.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label34.Location = New System.Drawing.Point(13, 535)
+        Me.Label34.Name = "Label34"
+        Me.Label34.Size = New System.Drawing.Size(478, 15)
+        Me.Label34.TabIndex = 72
+        Me.Label34.Text = "Da clic en la primera columna de cualquier registro para ver sus detalles."
+        '
+        'IdCorreo
+        '
+        Me.IdCorreo.HeaderText = "ID"
+        Me.IdCorreo.Name = "IdCorreo"
+        Me.IdCorreo.Visible = False
+        '
+        'Correo
+        '
+        Me.Correo.HeaderText = "Correo"
+        Me.Correo.Name = "Correo"
+        Me.Correo.Width = 140
+        '
+        'IdNumeroTelefono
+        '
+        Me.IdNumeroTelefono.HeaderText = "ID"
+        Me.IdNumeroTelefono.Name = "IdNumeroTelefono"
+        Me.IdNumeroTelefono.Visible = False
+        '
+        'NumeroTelefono
+        '
+        Me.NumeroTelefono.HeaderText = "Número de Teléfono"
+        Me.NumeroTelefono.Name = "NumeroTelefono"
+        Me.NumeroTelefono.Width = 140
+        '
         'Contactos
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.LightSlateGray
-        Me.ClientSize = New System.Drawing.Size(1304, 861)
+        Me.ClientSize = New System.Drawing.Size(1304, 890)
+        Me.Controls.Add(Me.Label34)
+        Me.Controls.Add(Me.BtnModificarCorreo)
+        Me.Controls.Add(Me.BtnModificarNumeroTelefono)
         Me.Controls.Add(Me.BtnLimpiarCampos)
         Me.Controls.Add(Me.PictureBox1)
         Me.Controls.Add(Me.BtnSalir)
@@ -1152,7 +1209,12 @@ Partial Class Contactos
     Friend WithEvents BtnEliminarNumeroTelefono As Button
     Friend WithEvents BtnSalir As Button
     Friend WithEvents PictureBox1 As PictureBox
-    Friend WithEvents NumeroTelefono As DataGridViewTextBoxColumn
-    Friend WithEvents Correo As DataGridViewTextBoxColumn
     Friend WithEvents BtnLimpiarCampos As Button
+    Friend WithEvents BtnModificarNumeroTelefono As Button
+    Friend WithEvents BtnModificarCorreo As Button
+    Friend WithEvents Label34 As Label
+    Friend WithEvents IdCorreo As DataGridViewTextBoxColumn
+    Friend WithEvents Correo As DataGridViewTextBoxColumn
+    Friend WithEvents IdNumeroTelefono As DataGridViewTextBoxColumn
+    Friend WithEvents NumeroTelefono As DataGridViewTextBoxColumn
 End Class

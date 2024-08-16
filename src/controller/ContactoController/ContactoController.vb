@@ -25,11 +25,21 @@ Public Class ContactoController
 
             Dim queryResults As SqlDataReader = DatabaseController.ExecuteQuery(sqlQuery)
 
+            If queryResults Is Nothing Then
+                DatabaseController.CloseConnection()
+
+                Return contactos
+
+                Exit Function
+            End If
+
             While queryResults.Read()
                 Dim contacto As Contacto = LlenarContacto(queryResults)
 
                 contactos.Add(contacto)
             End While
+
+            DatabaseController.CloseConnection()
 
             Return contactos
 
@@ -39,7 +49,29 @@ Public Class ContactoController
 
     End Function
 
-    Public Function LlenarContacto(queryResults As SqlDataReader)
+    Public Function DeleteContactoById(idContacto As Integer) As Boolean
+        Try
+            Dim contactoEliminado As Boolean = False
+
+            Dim spParameters As New Dictionary(Of String, SqlParameter) From {
+                {"@IdContacto", New SqlParameter("@IdContacto", SqlDbType.Int) With {.Value = idContacto}}
+            }
+
+            DatabaseController.ExecuteStoredProcedure("SpEliminarContacto", spParameters)
+
+            contactoEliminado = True
+
+            DatabaseController.CloseConnection()
+
+            Return contactoEliminado
+        Catch ex As Exception
+            Console.WriteLine(ex.Message)
+
+            Return Nothing
+        End Try
+    End Function
+
+    Private Function LlenarContacto(queryResults As SqlDataReader)
         Dim contacto As New Contacto()
 
         'Datos de contacto

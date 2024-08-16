@@ -44,6 +44,8 @@ Public Class DireccionController
 
                 direccion = New Direccion(idDireccion, calle, numeroInterior, numeroExterior, colonia, localidad, municipio, estado, codigoPostal, tipo)
 
+                DatabaseController.CloseConnection()
+
                 Return direccion
             End If
 

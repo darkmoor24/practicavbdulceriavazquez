@@ -27,6 +27,8 @@ Public Class NumeroTelefonoController
                 listaNumerosTelefono.Add(numeroTelefono)
             End While
 
+            DatabaseController.CloseConnection()
+
             Return listaNumerosTelefono
         Catch ex As Exception
             Return Nothing

@@ -8,6 +8,11 @@ Public Class Contactos
     Private Property categoriasContacto As ArrayList
     Private Property tiposTelefono As ArrayList
     Private Property editandoContacto As Boolean = False
+    Private Property editandoNumeroTelefonoContacto As Boolean = False
+    Private Property editandoCorreoContacto As Boolean = False
+    Private Property idContactoEnEdicion As Integer
+    Private Property numeroTelefonoEnEdicion As NumeroTelefono
+    Private Property correoEnEdicion As Correo
 
     Private Sub Contactos_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         InitControllers()
@@ -37,7 +42,15 @@ Public Class Contactos
 
     End Sub
 
+    Private Sub BtnModificarNumeroTelefono_Click(sender As Object, e As EventArgs) Handles BtnModificarNumeroTelefono.Click
+
+    End Sub
+
     Private Sub BtnEliminarCorreo_Click(sender As Object, e As EventArgs) Handles BtnEliminarCorreo.Click
+
+    End Sub
+
+    Private Sub BtnModificarCorreo_Click(sender As Object, e As EventArgs) Handles BtnModificarCorreo.Click
 
     End Sub
 
@@ -57,6 +70,13 @@ Public Class Contactos
 
             Exit Sub
         End If
+
+        If editandoNumeroTelefonoContacto OrElse editandoCorreoContacto Then
+            MessageBox.Show("No se puede modificar el contacto si estás editando un número de teléfono o correo electrónico")
+
+            Exit Sub
+        End If
+
     End Sub
 
     Private Sub BtnEliminarContacto_Click(sender As Object, e As EventArgs) Handles BtnEliminarContacto.Click
@@ -65,12 +85,38 @@ Public Class Contactos
 
             Exit Sub
         End If
+
+        If editandoNumeroTelefonoContacto OrElse editandoCorreoContacto Then
+            MessageBox.Show("No se puede modificar el contacto si estás editando un número de teléfono o correo electrónico")
+
+            Exit Sub
+        End If
+
+        Dim mensaje As String = "¿Estás seguro de que deseas eliminar este contacto?" & vbCrLf & vbCrLf &
+                        "Al continuar los datos se eliminaran de forma permanente"
+
+        Dim resultado As DialogResult = MessageBox.Show(mensaje, "Confirmar eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+
+        If resultado = DialogResult.Yes Then
+            Console.WriteLine("Eliminando: " & idContactoEnEdicion)
+
+            Dim eliminado As Boolean = ContactoController.DeleteContactoById(idContactoEnEdicion)
+
+            If eliminado Then
+                MessageBox.Show("Contacto eliminado con éxito")
+
+                RefetchContactos()
+
+                LimpiarCampos()
+            Else
+                MessageBox.Show("No se pudo eliminar el contacto")
+            End If
+        End If
+
     End Sub
 
     Private Sub BtnLimpiarCampos_Click(sender As Object, e As EventArgs) Handles BtnLimpiarCampos.Click
-        editandoContacto = False
-
-
+        LimpiarCampos()
     End Sub
 
     Private Sub CboCategoria_SelectedIndexChanged(sender As Object, e As EventArgs) Handles CboCategoria.SelectedIndexChanged
@@ -109,7 +155,6 @@ Public Class Contactos
                 'Deshabilitar
                 TxtCurp.Enabled = False
                 TxtCurp.Text = ""
-
                 TxtPuesto.Enabled = False
                 TxtPuesto.Text = ""
 
@@ -153,12 +198,21 @@ Public Class Contactos
     End Sub
 
     Private Sub DTContactos_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles DTContactos.CellClick
-        If e.RowIndex = 0 AndAlso e.ColumnIndex = -1 Then
-            editandoContacto = True
+        If e.RowIndex >= 0 AndAlso e.ColumnIndex = -1 Then
 
             Dim fila As DataGridViewRow = DTContactos.Rows(e.RowIndex)
 
+            If fila.Cells("IdContacto").Value Is Nothing Then
+                MessageBox.Show("No hay datos para mostrar en esta fila")
+
+                Exit Sub
+            End If
+
+            editandoContacto = True
+
             Dim idContacto As Integer = fila.Cells("IdContacto").Value.ToString()
+
+            idContactoEnEdicion = idContacto
 
             'Domicilio
             TxtCalle.Text = fila.Cells("Calle").Value.ToString()
@@ -191,13 +245,13 @@ Public Class Contactos
             DTNumerosTelefono.Rows.Clear()
 
             For Each numeroTelefono As NumeroTelefono In listaNumerosTelefonoContactoElegido
-                DTNumerosTelefono.Rows.Add(numeroTelefono.NumeroTelefono)
+                DTNumerosTelefono.Rows.Add(numeroTelefono.IdNumeroTelefono, numeroTelefono.NumeroTelefono)
             Next
 
             DTCorreos.Rows.Clear()
 
             For Each correo As Correo In listaCorreosContactoElegido
-                DTCorreos.Rows.Add(correo.Correo)
+                DTCorreos.Rows.Add(correo.IdCorreo, correo.Correo)
             Next
 
             DTNumerosTelefono.Columns(0).AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
@@ -306,19 +360,94 @@ Public Class Contactos
         End If
     End Sub
 
+    Private Sub DTContactos_CellMouseEnter(sender As Object, e As DataGridViewCellEventArgs) Handles DTContactos.CellMouseEnter
+        ' Verifica si el mouse está sobre la última columna
+        If e.RowIndex >= 0 AndAlso e.ColumnIndex = -1 Then
+            DTContactos.Cursor = Cursors.Hand ' Cambia el cursor a mano
+        End If
+    End Sub
+
+    Private Sub DTContactos_CellMouseLeave(sender As Object, e As DataGridViewCellEventArgs) Handles DTContactos.CellMouseLeave
+        ' Verifica si el mouse sale de la última columna
+        If e.RowIndex >= 0 AndAlso e.ColumnIndex = -1 Then
+            DTContactos.Cursor = Cursors.Default ' Restaura el cursor por defecto
+        End If
+    End Sub
+
     Private Sub DTNumerosTelefono_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles DTNumerosTelefono.CellClick
-        If e.RowIndex = 0 AndAlso e.ColumnIndex = -1 Then
-            Dim fila As DataGridViewRow = DTContactos.Rows(e.RowIndex)
+        If e.RowIndex >= 0 AndAlso e.ColumnIndex = -1 Then
+            Dim fila As DataGridViewRow = DTNumerosTelefono.Rows(e.RowIndex)
 
-            Dim numeroTelefono As Integer = fila.Cells("NumeroTelefono").Value.ToString()
+            If fila.Cells("NumeroTelefono").Value Is Nothing Then
+                MessageBox.Show("No hay datos para mostrar en esta fila")
 
+                Exit Sub
+            End If
+
+            editandoNumeroTelefonoContacto = True
+
+            Dim numeroTelefono As String = fila.Cells("NumeroTelefono").Value.ToString()
+
+            Console.WriteLine("Numero de telefono elegido: " & numeroTelefono)
+
+            Dim numeroTelefonoElegido As NumeroTelefono = GetNumeroTelefonoElegido(numeroTelefono)
+
+            numeroTelefonoEnEdicion = numeroTelefonoElegido
+
+            TxtNumeroTelefono.Text = numeroTelefonoElegido.NumeroTelefono
+
+            CboTipoTelefono.SelectedItem = numeroTelefonoElegido.Tipo
 
         End If
     End Sub
 
-    Private Sub DTCorreos_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles DTCorreos.CellClick
-        If e.RowIndex = 0 AndAlso e.ColumnIndex = -1 Then
+    Private Sub DTNumerosTelefono_CellMouseEnter(sender As Object, e As DataGridViewCellEventArgs) Handles DTNumerosTelefono.CellMouseEnter
+        ' Verifica si el mouse está sobre la última columna
+        If e.RowIndex >= 0 AndAlso e.ColumnIndex = -1 Then
+            DTNumerosTelefono.Cursor = Cursors.Hand ' Cambia el cursor a mano
+        End If
+    End Sub
 
+    Private Sub DTNumerosTelefono_CellMouseLeave(sender As Object, e As DataGridViewCellEventArgs) Handles DTNumerosTelefono.CellMouseLeave
+        ' Verifica si el mouse sale de la última columna
+        If e.RowIndex >= 0 AndAlso e.ColumnIndex = -1 Then
+            DTNumerosTelefono.Cursor = Cursors.Default ' Restaura el cursor por defecto
+        End If
+    End Sub
+
+    Private Sub DTCorreos_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles DTCorreos.CellClick
+        If e.RowIndex >= 0 AndAlso e.ColumnIndex = -1 Then
+            Dim fila As DataGridViewRow = DTCorreos.Rows(e.RowIndex)
+
+            If fila.Cells("Correo").Value Is Nothing Then
+                MessageBox.Show("No hay datos para mostrar en esta fila")
+
+                Exit Sub
+            End If
+
+            Dim correo As String = fila.Cells("Correo").Value.ToString()
+
+            Dim correoElegido As Correo = GetCorreoElegido(correo)
+
+            correoEnEdicion = correoElegido
+
+            TxtCorreo.Text = correoElegido.Correo
+
+            editandoCorreoContacto = True
+        End If
+    End Sub
+
+    Private Sub DTCorreos_CellMouseEnter(sender As Object, e As DataGridViewCellEventArgs) Handles DTCorreos.CellMouseEnter
+        ' Verifica si el mouse está sobre la última columna
+        If e.RowIndex >= 0 AndAlso e.ColumnIndex = -1 Then
+            DTCorreos.Cursor = Cursors.Hand ' Cambia el cursor a mano
+        End If
+    End Sub
+
+    Private Sub DTCorreos_CellMouseLeave(sender As Object, e As DataGridViewCellEventArgs) Handles DTCorreos.CellMouseLeave
+        ' Verifica si el mouse sale de la última columna
+        If e.RowIndex >= 0 AndAlso e.ColumnIndex = -1 Then
+            DTCorreos.Cursor = Cursors.Default ' Restaura el cursor por defecto
         End If
     End Sub
 
@@ -349,9 +478,9 @@ Public Class Contactos
             LlenarCboTiposNumeroTelefono()
         End If
 
-        If contactos.Count > 0 Then
+        'If contactos.Count > 0 Then
             LlenarDataTableContactos()
-        End If
+        'End If
     End Sub
 
     Private Sub LlenarCboCategoriasContacto()
@@ -367,8 +496,9 @@ Public Class Contactos
     End Sub
 
     Private Sub LlenarDataTableContactos()
-        For Each contacto As Contacto In contactos
-            DTContactos.Rows.Add(
+        If contactos.Count > 0 Then
+            For Each contacto As Contacto In contactos
+                DTContactos.Rows.Add(
                 contacto.IdContacto,
                 contacto.NombreCompleto,
                 contacto.Apellidos,
@@ -394,9 +524,17 @@ Public Class Contactos
                 If(contacto.DatosProveedor.RegimenFiscal <> "", contacto.DatosProveedor.RegimenFiscal, "N/A"),
                 If(contacto.DatosProveedor.FechaEntregaMercancia <> "", contacto.DatosProveedor.FechaEntregaMercancia, "N/A")
             )
-        Next
+            Next
 
-        DTContactos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
+            DTContactos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
+        Else
+            MessageBox.Show("No se encontraron contactos para este usuario")
+
+            If DTContactos.RowCount > 0 Then
+                DTContactos.Rows.Clear()
+            End If
+
+        End If
     End Sub
 
     Private Function GetContactoElegido(idContacto As Integer)
@@ -410,4 +548,111 @@ Public Class Contactos
 
         Return Nothing ' Si no se encuentra el contacto, se devuelve Nothing
     End Function
+
+    Private Function GetNumeroTelefonoElegido(numeroTelefonoBuscado As String) As NumeroTelefono
+        For Each contacto As Contacto In contactos
+            For Each numeroTelefono As NumeroTelefono In contacto.ListaNumerosTelefono
+
+                If numeroTelefono.NumeroTelefono = numeroTelefonoBuscado Then
+
+                    Return numeroTelefono
+                End If
+            Next
+        Next
+
+        Return Nothing
+    End Function
+
+    Private Function GetCorreoElegido(correoBuscado As String) As Correo
+        For Each contacto As Contacto In contactos
+            For Each correo As Correo In contacto.ListaCorreos
+                If correo.Correo = correoBuscado Then
+                    Return correo
+                End If
+            Next
+        Next
+
+        Return Nothing
+    End Function
+
+    Private Sub LimpiarCampos()
+        editandoContacto = False
+
+        editandoCorreoContacto = False
+
+        editandoNumeroTelefonoContacto = False
+
+        idContactoEnEdicion = 0
+
+        correoEnEdicion = Nothing
+
+        numeroTelefonoEnEdicion = Nothing
+
+        TxtCalle.Text = ""
+
+        TxtNumeroExterior.Text = ""
+
+        TxtNumeroInterior.Text = ""
+
+        TxtColonia.Text = ""
+
+        TxtCodigoPostal.Text = ""
+
+        TxtLocalidad.Text = ""
+
+        TxtMunicipio.Text = ""
+
+        TxtEstado.Text = ""
+
+        TxtNombreCompleto.Text = ""
+
+        TxtApellidos.Text = ""
+
+        TxtCorreo.Text = ""
+
+        TxtCurp.Text = ""
+        TxtCurp.Enabled = False
+
+        TxtPuesto.Text = ""
+        TxtPuesto.Enabled = False
+
+        TxtSueldo.Text = ""
+        TxtSueldo.Enabled = False
+
+        TxtMontoCredito.Text = ""
+        TxtMontoCredito.Enabled = False
+
+        TxtDiasCredito.Text = ""
+        TxtDiasCredito.Enabled = False
+
+        TxtRegimenFiscalCliente.Text = ""
+        TxtRegimenFiscalCliente.Enabled = False
+
+        TxtDescripcion.Text = ""
+        TxtDescripcion.Enabled = False
+
+        TxtFechaEntregaMercancia.Text = ""
+        TxtFechaEntregaMercancia.Enabled = False
+
+        TxtRegimenFiscalProveedor.Text = ""
+        TxtRegimenFiscalProveedor.Enabled = False
+
+        RBtnDireccionFiscal.Checked = False
+
+        RBtnDireccionReal.Checked = False
+
+        CboCategoria.SelectedIndex = -1
+
+        CboTipoTelefono.SelectedIndex = -1
+
+        DTNumerosTelefono.Rows.Clear()
+
+        DTCorreos.Rows.Clear()
+    End Sub
+
+    Private Sub RefetchContactos()
+        contactos = ContactoController.GetContactosByIdUsuario(DatosGlobales.UsuarioIngresado.IdUsuario)
+
+        LlenarDataTableContactos()
+    End Sub
 End Class

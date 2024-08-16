@@ -1,5 +1,14 @@
+use master;
+go
+
+DROP DATABASE IF EXISTS practicadulceriavazquez;
+GO
+
+CREATE DATABASE practicadulceriavazquez;
+GO
 
 USE practicadulceriavazquez;
+GO
 
 CREATE TABLE Usuario (
 	IdUsuario		INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
@@ -109,7 +118,7 @@ FROM
 	LEFT JOIN DatosProveedor dp ON c.IdContacto = dp.IdContacto;
 GO
 
-CREATE PROCEDURE spInsertarContacto
+CREATE PROCEDURE SpInsertarContacto
     @NombreCompleto NVARCHAR(255),
     @Apellidos NVARCHAR(255),
     @IdDireccion INT,
@@ -143,7 +152,7 @@ BEGIN
 END;
 GO
 
-CREATE PROCEDURE spInsertarNumeroTelefono
+CREATE PROCEDURE SpInsertarNumeroTelefono
     @IdContacto INT,
     @NumeroTelefono NVARCHAR(12),
     @Tipo NVARCHAR(50)
@@ -170,7 +179,7 @@ BEGIN
 END;
 GO
 
-CREATE PROCEDURE spInsertarCorreo
+CREATE PROCEDURE SpInsertarCorreo
     @IdContacto INT,
     @Correo NVARCHAR(90)
 AS
@@ -196,7 +205,7 @@ BEGIN
 END;
 GO
 
-CREATE PROCEDURE spActualizarContacto
+CREATE PROCEDURE SpActualizarContacto
     @NombreCompleto NVARCHAR(255),
     @Apellidos NVARCHAR(255),
     @IdDireccion INT,
@@ -230,7 +239,7 @@ BEGIN
 END;
 GO
 
-CREATE PROCEDURE spActualizarNumeroTelefono
+CREATE PROCEDURE SpActualizarNumeroTelefono
     @IdContacto INT,
     @NumeroTelefono NVARCHAR(12),
     @Tipo NVARCHAR(50)
@@ -257,7 +266,7 @@ BEGIN
 END;
 GO
 
-CREATE PROCEDURE spActualizarCorreo
+CREATE PROCEDURE SpActualizarCorreo
     @IdContacto INT,
     @Correo NVARCHAR(90)
 AS
@@ -282,6 +291,33 @@ BEGIN
     END CATCH
 END;
 GO
+
+CREATE PROCEDURE SpEliminarContacto
+    @IdContacto INT
+AS
+BEGIN
+
+    BEGIN TRANSACTION;
+
+    BEGIN TRY
+        IF EXISTS (SELECT 1 FROM Contacto WHERE IdContacto = @IdContacto)
+			BEGIN
+				DELETE FROM Contacto WHERE IdContacto = @IdContacto;
+
+				COMMIT TRANSACTION;
+
+				RETURN 1
+        END
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+
+        THROW;
+    END CATCH
+END
+GO
+
+
 
 INSERT INTO Usuario (NombreUsuario, Contrasenia) VALUES 
 ('serchrmz', 'skyper123'), /* ID 1 */

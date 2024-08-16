@@ -32,6 +32,8 @@ Public Class CorreoController
                     listaCorreos.Add(correo)
                 End While
 
+                DatabaseController.CloseConnection()
+
                 Return listaCorreos
 
             End If

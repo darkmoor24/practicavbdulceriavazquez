@@ -21,6 +21,8 @@ Public Class CategoriaController
                 categoriasContacto.Add(categoria)
             End While
 
+            DatabaseController.CloseConnection()
+
             Return categoriasContacto
         Catch ex As Exception
             Return Nothing
