@@ -222,7 +222,7 @@ Public Class Contactos
         Dim resultado As DialogResult = MessageBox.Show(mensaje, "Confirmar eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
 
         If resultado = DialogResult.Yes Then
-            nuevosNumerosTelefonoContacto.Remove(correoEnEdicion)
+            nuevosCorreosContacto.Remove(correoEnEdicion)
 
             ActualizarDataTableCorreos()
 
@@ -261,10 +261,10 @@ Public Class Contactos
         End If
 
         For Each correo As Correo In nuevosCorreosContacto
-                If correo.Equals(numeroTelefonoEnEdicion) Then
-                    correo.Correo = TxtCorreo.Text
-                End If
-            Next
+            If correo.Equals(correoEnEdicion) Then
+                correo.Correo = TxtCorreo.Text
+            End If
+        Next
 
             ActualizarDataTableCorreos()
 
