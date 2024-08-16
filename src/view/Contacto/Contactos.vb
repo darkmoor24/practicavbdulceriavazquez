@@ -863,6 +863,8 @@ Public Class Contactos
         Next
 
         DTNumerosTelefono.Columns(0).AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+
+        DTNumerosTelefono.ScrollBars = ScrollBars.Vertical
     End Sub
 
     Private Sub ActualizarDataTableCorreos()
@@ -873,6 +875,8 @@ Public Class Contactos
         Next
 
         DTCorreos.Columns(0).AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+
+        DTCorreos.ScrollBars = ScrollBars.Vertical
     End Sub
 
     Public Function EsCorreoValido(correo As String) As Boolean
