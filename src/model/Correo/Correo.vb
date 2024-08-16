@@ -6,6 +6,18 @@
 
     End Sub
 
+    Public Overrides Function Equals(obj As Object) As Boolean
+        If TypeOf obj Is Correo Then
+            Dim other As Correo = CType(obj, Correo)
+            Return Me.Correo = other.Correo
+        End If
+        Return False
+    End Function
+
+    Public Overrides Function GetHashCode() As Integer
+        Return Correo.GetHashCode()
+    End Function
+
     Public Sub New(idCorreo As Integer, correo As String)
         _IdCorreo = idCorreo
         _Correo = correo

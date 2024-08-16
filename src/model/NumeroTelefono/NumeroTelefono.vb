@@ -12,6 +12,18 @@
         _Tipo = tipo
     End Sub
 
+    Public Overrides Function Equals(obj As Object) As Boolean
+        If TypeOf obj Is NumeroTelefono Then
+            Dim other As NumeroTelefono = CType(obj, NumeroTelefono)
+            Return Me.NumeroTelefono = other.NumeroTelefono
+        End If
+        Return False
+    End Function
+
+    Public Overrides Function GetHashCode() As Integer
+        Return NumeroTelefono.GetHashCode()
+    End Function
+
     Public Property IdNumeroTelefono As Integer
         Get
             Return _IdNumeroTelefono

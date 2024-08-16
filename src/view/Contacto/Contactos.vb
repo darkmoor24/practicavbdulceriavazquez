@@ -1,4 +1,5 @@
 ﻿Imports System.Runtime.Remoting.Proxies
+Imports System.Text.RegularExpressions
 
 Public Class Contactos
 
@@ -7,6 +8,8 @@ Public Class Contactos
     Private Property contactos As ArrayList
     Private Property categoriasContacto As ArrayList
     Private Property tiposTelefono As ArrayList
+    Private Property nuevosNumerosTelefonoContacto As New ArrayList()
+    Private Property nuevosCorreosContacto As New ArrayList()
     Private Property editandoContacto As Boolean = False
     Private Property editandoNumeroTelefonoContacto As Boolean = False
     Private Property editandoCorreoContacto As Boolean = False
@@ -31,27 +34,241 @@ Public Class Contactos
     End Sub
 
     Private Sub BtnAgregarNumeroTelefono_Click(sender As Object, e As EventArgs) Handles BtnAgregarNumeroTelefono.Click
+        If Not editandoContacto Then
+            MessageBox.Show("Para agregar un número de teléfono primero debes agregar un nuevo contacto.")
 
-    End Sub
+            Exit Sub
+        End If
 
-    Private Sub BtnAgregarCorreo_Click(sender As Object, e As EventArgs) Handles BtnAgregarCorreo.Click
+        If TxtNumeroTelefono.Text = "" Then
+            MessageBox.Show("No se puede agregar un número de teléfono en blanco.")
 
+            Exit Sub
+        End If
+
+        If TxtNumeroTelefono.Text.Length < 10 Then
+            MessageBox.Show("Ingresa un número de teléfono de 10 dígitos.")
+
+            Exit Sub
+        End If
+
+        If CboTipoTelefono.SelectedIndex = -1 Then
+            MessageBox.Show("Selecciona un tipo de número de teléfono.")
+
+            Exit Sub
+        End If
+
+        Dim nuevoNumeroTelefono As New NumeroTelefono(0, TxtNumeroTelefono.Text, CboTipoTelefono.SelectedItem)
+
+        If nuevosNumerosTelefonoContacto.Contains(nuevoNumeroTelefono) Then
+            MessageBox.Show("El número de teléfono ya existe, ingresa uno distinto.")
+
+            Exit Sub
+        End If
+
+        Dim lastItemInArrayNumerosTelefono As NumeroTelefono = nuevosNumerosTelefonoContacto(nuevosNumerosTelefonoContacto.Count - 1)
+
+        nuevoNumeroTelefono.IdNumeroTelefono = lastItemInArrayNumerosTelefono.IdNumeroTelefono + 1
+
+        nuevosNumerosTelefonoContacto.Add(nuevoNumeroTelefono)
+
+        ActualizarDataTableNumerosTelefono()
+
+        TxtNumeroTelefono.Text = ""
+
+        CboTipoTelefono.SelectedIndex = -1
+
+        If editandoNumeroTelefonoContacto Then
+            editandoNumeroTelefonoContacto = False
+        End If
     End Sub
 
     Private Sub BtnEliminarNumeroTelefono_Click(sender As Object, e As EventArgs) Handles BtnEliminarNumeroTelefono.Click
 
+        If Not editandoContacto Then
+            MessageBox.Show("Para eliminar un número de teléfono primero debes elegir un contacto.")
+
+            Exit Sub
+        End If
+
+        If Not editandoNumeroTelefonoContacto Then
+            MessageBox.Show("Para eliminar un número de teléfono primero debes elegir uno de la lista.")
+
+            Exit Sub
+
+        End If
+
+        Dim mensaje As String = "¿Estás seguro de que deseas eliminar este número de teléfono?"
+
+        Dim resultado As DialogResult = MessageBox.Show(mensaje, "Confirmar eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+
+        If resultado = DialogResult.Yes Then
+            nuevosNumerosTelefonoContacto.Remove(numeroTelefonoEnEdicion)
+
+            ActualizarDataTableNumerosTelefono()
+
+            numeroTelefonoEnEdicion = Nothing
+
+            editandoNumeroTelefonoContacto = False
+        Else
+            MessageBox.Show("No se eliminó el número de teléfono.")
+        End If
+
     End Sub
 
     Private Sub BtnModificarNumeroTelefono_Click(sender As Object, e As EventArgs) Handles BtnModificarNumeroTelefono.Click
+        If Not editandoContacto Then
+            MessageBox.Show("Para modificar un número de teléfono primero debes elegir un contacto.")
 
+            Exit Sub
+        End If
+
+        If Not editandoNumeroTelefonoContacto Then
+            MessageBox.Show("Para modificar un número de teléfono primero debes elegir uno de la lista.")
+
+            Exit Sub
+
+        End If
+
+        If TxtNumeroTelefono.Text = "" Then
+            MessageBox.Show("No se puede agregar un número de teléfono en blanco.")
+
+            Exit Sub
+        End If
+
+        If TxtNumeroTelefono.Text.Length < 10 Then
+            MessageBox.Show("Ingresa un número de teléfono de 10 dígitos.")
+
+            Exit Sub
+        End If
+
+        If CboTipoTelefono.SelectedIndex = -1 Then
+            MessageBox.Show("Selecciona un tipo de número de teléfono.")
+
+            Exit Sub
+        End If
+
+        For Each numero As NumeroTelefono In nuevosNumerosTelefonoContacto
+            If numero.Equals(numeroTelefonoEnEdicion) Then
+                numero.NumeroTelefono = TxtNumeroTelefono.Text
+
+                numero.Tipo = CboTipoTelefono.SelectedItem.ToString()
+            End If
+        Next
+
+        ActualizarDataTableNumerosTelefono()
+
+        MessageBox.Show("Número de teléfono modificado exitosamente.")
+    End Sub
+
+    Private Sub BtnAgregarCorreo_Click(sender As Object, e As EventArgs) Handles BtnAgregarCorreo.Click
+        If Not editandoContacto Then
+            MessageBox.Show("Para agregar un correo primero debes elegir un contacto.")
+
+            Exit Sub
+        End If
+
+        If TxtCorreo.Text = "" Then
+            MessageBox.Show("Ingresa un correo electrónico.")
+
+            Exit Sub
+        End If
+
+        If Not EsCorreoValido(TxtCorreo.Text) Then
+            MessageBox.Show("Ingresa un correo electrónico válido.")
+
+            Exit Sub
+        End If
+
+        Dim nuevoCorreo As New Correo(0, TxtCorreo.Text)
+
+        If nuevosCorreosContacto.Contains(nuevoCorreo) Then
+            MessageBox.Show("El correo ya existe, ingresa uno distinto.")
+
+            Exit Sub
+        End If
+
+        Dim lastItemInArrayCorreos As Correo = nuevosCorreosContacto(nuevosCorreosContacto.Count - 1)
+
+        nuevoCorreo.IdCorreo = lastItemInArrayCorreos.IdCorreo + 1
+
+        nuevosCorreosContacto.Add(nuevoCorreo)
+
+        ActualizarDataTableCorreos()
+
+        TxtCorreo.Text = ""
+
+        If editandoCorreoContacto Then
+            editandoCorreoContacto = False
+        End If
     End Sub
 
     Private Sub BtnEliminarCorreo_Click(sender As Object, e As EventArgs) Handles BtnEliminarCorreo.Click
+        If Not editandoContacto Then
+            MessageBox.Show("Para eliminar un correo primero debes elegir un contacto.")
 
+            Exit Sub
+        End If
+
+        If Not editandoCorreoContacto Then
+            MessageBox.Show("Para eliminar un correo primero debes elegir uno de la lista.")
+
+            Exit Sub
+
+        End If
+
+        Dim mensaje As String = "¿Estás seguro de que deseas eliminar este correo?"
+
+        Dim resultado As DialogResult = MessageBox.Show(mensaje, "Confirmar eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+
+        If resultado = DialogResult.Yes Then
+            nuevosNumerosTelefonoContacto.Remove(correoEnEdicion)
+
+            ActualizarDataTableCorreos()
+
+            correoEnEdicion = Nothing
+
+            editandoCorreoContacto = False
+        Else
+            MessageBox.Show("No se eliminó el correo.")
+        End If
     End Sub
 
     Private Sub BtnModificarCorreo_Click(sender As Object, e As EventArgs) Handles BtnModificarCorreo.Click
+        If Not editandoContacto Then
+            MessageBox.Show("Para modificar un número de teléfono primero debes elegir un contacto.")
 
+            Exit Sub
+        End If
+
+        If Not editandoCorreoContacto Then
+            MessageBox.Show("Para modificar un número de teléfono primero debes elegir uno de la lista.")
+
+            Exit Sub
+
+        End If
+
+        If TxtCorreo.Text = "" Then
+            MessageBox.Show("Ingresa un correo electrónico.")
+
+            Exit Sub
+        End If
+
+        If Not EsCorreoValido(TxtCorreo.Text) Then
+            MessageBox.Show("Ingresa un correo electrónico válido.")
+
+            Exit Sub
+        End If
+
+        For Each correo As Correo In nuevosCorreosContacto
+                If correo.Equals(numeroTelefonoEnEdicion) Then
+                    correo.Correo = TxtCorreo.Text
+                End If
+            Next
+
+            ActualizarDataTableCorreos()
+
+            MessageBox.Show("Correo modificado exitosamente.")
     End Sub
 
     Private Sub BtnAgregarContacto_Click(sender As Object, e As EventArgs) Handles BtnAgregarContacto.Click
@@ -98,7 +315,6 @@ Public Class Contactos
         Dim resultado As DialogResult = MessageBox.Show(mensaje, "Confirmar eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
 
         If resultado = DialogResult.Yes Then
-            Console.WriteLine("Eliminando: " & idContactoEnEdicion)
 
             Dim eliminado As Boolean = ContactoController.DeleteContactoById(idContactoEnEdicion)
 
@@ -109,7 +325,7 @@ Public Class Contactos
 
                 LimpiarCampos()
             Else
-                MessageBox.Show("No se pudo eliminar el contacto")
+                MessageBox.Show("No se eliminó el contacto")
             End If
         End If
 
@@ -238,25 +454,13 @@ Public Class Contactos
 
             Dim contactoElegido As Contacto = GetContactoElegido(idContacto)
 
-            Dim listaNumerosTelefonoContactoElegido As ArrayList = contactoElegido.ListaNumerosTelefono
+            nuevosNumerosTelefonoContacto = contactoElegido.ListaNumerosTelefono
 
-            Dim listaCorreosContactoElegido As ArrayList = contactoElegido.ListaCorreos
+            nuevosCorreosContacto = contactoElegido.ListaCorreos
 
-            DTNumerosTelefono.Rows.Clear()
+            ActualizarDataTableNumerosTelefono()
 
-            For Each numeroTelefono As NumeroTelefono In listaNumerosTelefonoContactoElegido
-                DTNumerosTelefono.Rows.Add(numeroTelefono.IdNumeroTelefono, numeroTelefono.NumeroTelefono)
-            Next
-
-            DTCorreos.Rows.Clear()
-
-            For Each correo As Correo In listaCorreosContactoElegido
-                DTCorreos.Rows.Add(correo.IdCorreo, correo.Correo)
-            Next
-
-            DTNumerosTelefono.Columns(0).AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-
-            DTCorreos.Columns(0).AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+            ActualizarDataTableCorreos()
 
             'Categoria
             Dim categoriaContactoElegido As String = fila.Cells("NombreCategoria").Value.ToString()
@@ -388,8 +592,6 @@ Public Class Contactos
 
             Dim numeroTelefono As String = fila.Cells("NumeroTelefono").Value.ToString()
 
-            Console.WriteLine("Numero de telefono elegido: " & numeroTelefono)
-
             Dim numeroTelefonoElegido As NumeroTelefono = GetNumeroTelefonoElegido(numeroTelefono)
 
             numeroTelefonoEnEdicion = numeroTelefonoElegido
@@ -479,7 +681,7 @@ Public Class Contactos
         End If
 
         'If contactos.Count > 0 Then
-            LlenarDataTableContactos()
+        LlenarDataTableContactos()
         'End If
     End Sub
 
@@ -550,14 +752,11 @@ Public Class Contactos
     End Function
 
     Private Function GetNumeroTelefonoElegido(numeroTelefonoBuscado As String) As NumeroTelefono
-        For Each contacto As Contacto In contactos
-            For Each numeroTelefono As NumeroTelefono In contacto.ListaNumerosTelefono
+        For Each numeroTelefono As NumeroTelefono In nuevosNumerosTelefonoContacto
+            If numeroTelefono.NumeroTelefono = numeroTelefonoBuscado Then
 
-                If numeroTelefono.NumeroTelefono = numeroTelefonoBuscado Then
-
-                    Return numeroTelefono
-                End If
-            Next
+                Return numeroTelefono
+            End If
         Next
 
         Return Nothing
@@ -655,4 +854,33 @@ Public Class Contactos
 
         LlenarDataTableContactos()
     End Sub
+
+    Private Sub ActualizarDataTableNumerosTelefono()
+        DTNumerosTelefono.Rows.Clear()
+
+        For Each numeroTelefono As NumeroTelefono In nuevosNumerosTelefonoContacto
+            DTNumerosTelefono.Rows.Add(numeroTelefono.IdNumeroTelefono, numeroTelefono.NumeroTelefono)
+        Next
+
+        DTNumerosTelefono.Columns(0).AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+    End Sub
+
+    Private Sub ActualizarDataTableCorreos()
+        DTCorreos.Rows.Clear()
+
+        For Each correo As Correo In nuevosCorreosContacto
+            DTCorreos.Rows.Add(correo.IdCorreo, correo.Correo)
+        Next
+
+        DTCorreos.Columns(0).AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+    End Sub
+
+    Public Function EsCorreoValido(correo As String) As Boolean
+
+        Dim patronCorreo As String = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+
+        Dim regex As New Regex(patronCorreo)
+
+        Return regex.IsMatch(correo)
+    End Function
 End Class
