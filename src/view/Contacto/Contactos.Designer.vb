@@ -119,6 +119,7 @@ Partial Class Contactos
         Me.BtnEliminarNumeroTelefono = New System.Windows.Forms.Button()
         Me.BtnSalir = New System.Windows.Forms.Button()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
+        Me.BtnLimpiarCampos = New System.Windows.Forms.Button()
         CType(Me.DTContactos, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.DTNumerosTelefono, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.DTCorreos, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -281,9 +282,9 @@ Partial Class Contactos
         Me.Label3.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label3.Location = New System.Drawing.Point(12, 44)
         Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(81, 20)
+        Me.Label3.Size = New System.Drawing.Size(159, 20)
         Me.Label3.TabIndex = 3
-        Me.Label3.Text = "Domicilio"
+        Me.Label3.Text = "Datos de Domicilio"
         '
         'Label4
         '
@@ -713,7 +714,7 @@ Partial Class Contactos
         Me.BtnAgregarContacto.FlatAppearance.BorderSize = 0
         Me.BtnAgregarContacto.FlatStyle = System.Windows.Forms.FlatStyle.Popup
         Me.BtnAgregarContacto.ForeColor = System.Drawing.Color.White
-        Me.BtnAgregarContacto.Location = New System.Drawing.Point(682, 400)
+        Me.BtnAgregarContacto.Location = New System.Drawing.Point(682, 379)
         Me.BtnAgregarContacto.Name = "BtnAgregarContacto"
         Me.BtnAgregarContacto.Size = New System.Drawing.Size(610, 25)
         Me.BtnAgregarContacto.TabIndex = 47
@@ -725,7 +726,7 @@ Partial Class Contactos
         Me.BtnModificarContacto.BackColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(123, Byte), Integer), CType(CType(255, Byte), Integer))
         Me.BtnModificarContacto.FlatStyle = System.Windows.Forms.FlatStyle.Popup
         Me.BtnModificarContacto.ForeColor = System.Drawing.Color.White
-        Me.BtnModificarContacto.Location = New System.Drawing.Point(682, 445)
+        Me.BtnModificarContacto.Location = New System.Drawing.Point(682, 416)
         Me.BtnModificarContacto.Name = "BtnModificarContacto"
         Me.BtnModificarContacto.Size = New System.Drawing.Size(610, 25)
         Me.BtnModificarContacto.TabIndex = 48
@@ -738,7 +739,7 @@ Partial Class Contactos
         Me.BtnEliminarContacto.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(CType(CType(220, Byte), Integer), CType(CType(53, Byte), Integer), CType(CType(69, Byte), Integer))
         Me.BtnEliminarContacto.FlatStyle = System.Windows.Forms.FlatStyle.Popup
         Me.BtnEliminarContacto.ForeColor = System.Drawing.Color.White
-        Me.BtnEliminarContacto.Location = New System.Drawing.Point(682, 491)
+        Me.BtnEliminarContacto.Location = New System.Drawing.Point(682, 452)
         Me.BtnEliminarContacto.Name = "BtnEliminarContacto"
         Me.BtnEliminarContacto.Size = New System.Drawing.Size(610, 25)
         Me.BtnEliminarContacto.TabIndex = 49
@@ -952,12 +953,26 @@ Partial Class Contactos
         Me.PictureBox1.TabIndex = 68
         Me.PictureBox1.TabStop = False
         '
+        'BtnLimpiarCampos
+        '
+        Me.BtnLimpiarCampos.BackColor = System.Drawing.Color.FromArgb(CType(CType(108, Byte), Integer), CType(CType(117, Byte), Integer), CType(CType(125, Byte), Integer))
+        Me.BtnLimpiarCampos.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(CType(CType(220, Byte), Integer), CType(CType(53, Byte), Integer), CType(CType(69, Byte), Integer))
+        Me.BtnLimpiarCampos.FlatStyle = System.Windows.Forms.FlatStyle.Popup
+        Me.BtnLimpiarCampos.ForeColor = System.Drawing.Color.White
+        Me.BtnLimpiarCampos.Location = New System.Drawing.Point(682, 489)
+        Me.BtnLimpiarCampos.Name = "BtnLimpiarCampos"
+        Me.BtnLimpiarCampos.Size = New System.Drawing.Size(610, 25)
+        Me.BtnLimpiarCampos.TabIndex = 69
+        Me.BtnLimpiarCampos.Text = "Limpiar Campos"
+        Me.BtnLimpiarCampos.UseVisualStyleBackColor = False
+        '
         'Contactos
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.LightSlateGray
         Me.ClientSize = New System.Drawing.Size(1304, 861)
+        Me.Controls.Add(Me.BtnLimpiarCampos)
         Me.Controls.Add(Me.PictureBox1)
         Me.Controls.Add(Me.BtnSalir)
         Me.Controls.Add(Me.BtnEliminarCorreo)
@@ -1029,6 +1044,7 @@ Partial Class Contactos
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.DTContactos)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MaximizeBox = False
         Me.MinimizeBox = False
         Me.Name = "Contactos"
@@ -1138,4 +1154,5 @@ Partial Class Contactos
     Friend WithEvents PictureBox1 As PictureBox
     Friend WithEvents NumeroTelefono As DataGridViewTextBoxColumn
     Friend WithEvents Correo As DataGridViewTextBoxColumn
+    Friend WithEvents BtnLimpiarCampos As Button
 End Class

@@ -2,16 +2,16 @@
     Private Property _IdDatosProveedor As Integer
     Private Property _Descripcion As String
     Private Property _RegimenFiscal As String
-    Private Property _FechaEntregaInmediata As String
+    Private Property _FechaEntregaMercancia As String
 
     Public Sub New()
     End Sub
 
-    Public Sub New(idDatosProveedor As Integer, descripcion As String, regimenFiscal As String, fechaEntregaInmediata As String)
+    Public Sub New(idDatosProveedor As Integer, descripcion As String, regimenFiscal As String, fechaEntregaMercancia As String)
         _IdDatosProveedor = idDatosProveedor
         _Descripcion = descripcion
         _RegimenFiscal = regimenFiscal
-        _FechaEntregaInmediata = fechaEntregaInmediata
+        _FechaEntregaMercancia = fechaEntregaMercancia
     End Sub
 
     Public Property IdDatosProveedor As Integer
@@ -41,12 +41,12 @@
         End Set
     End Property
 
-    Public Property FechaEntregaInmediata As String
+    Public Property FechaEntregaMercancia As String
         Get
-            Return _FechaEntregaInmediata
+            Return _FechaEntregaMercancia
         End Get
         Set(value As String)
-            _FechaEntregaInmediata = value
+            _FechaEntregaMercancia = value
         End Set
     End Property
 End Class

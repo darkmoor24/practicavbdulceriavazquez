@@ -90,8 +90,6 @@ CREATE TABLE DatosProveedor (
 );
 GO
 
-select * from ViewContactos order by CorreoID;
-
 CREATE VIEW ViewContactos AS
 SELECT 
     c.IdContacto, c.NombreCompleto AS NombreCompleto, c.Apellidos AS Apellidos, c.FechaRegistro AS FechaRegistro, c.FechaModificacion AS FechaModificacion,

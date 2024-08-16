@@ -10,7 +10,7 @@ Public Class LoginController
     Public Function ValidarCredenciales(nombreUsuario As String, contrasenia As String) As String
         Dim usuario As Usuario
 
-        Dim sqlQuery As String = $"SELECT * FROM Usuario WHERE NombreUsuario = {nombreUsuario}"
+        Dim sqlQuery As String = $"SELECT * FROM Usuario WHERE NombreUsuario = '{nombreUsuario}';"
 
         Try
             Dim queryResults = DatabaseController.ExecuteQuery(sqlQuery)
@@ -32,6 +32,8 @@ Public Class LoginController
                     usuario = New Usuario(idUsuario, nombreUsuarioDb, contrasenia)
 
                     DatosGlobales.UsuarioIngresado = usuario
+
+                    DatabaseController.CloseConnection()
 
                     Return "access_granted"
                 Else

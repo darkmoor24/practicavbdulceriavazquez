@@ -9,7 +9,9 @@ Public Class DatabaseController
     Public Sub New()
         Dim SqlServerName As String = ConfigurationManager.ConnectionStrings("DBConnectionString").ConnectionString
 
-        SqlConnection = New SqlConnection()
+        Console.WriteLine("SQL Server Name: " & SqlServerName)
+
+        SqlConnection = New SqlConnection(SqlServerName)
 
     End Sub
 
@@ -17,16 +19,14 @@ Public Class DatabaseController
         Try
             SqlConnection.Open()
 
+            Console.WriteLine("Ejecutando SQL Query: " & sqlQuery)
+
             SqlQuerys = New SqlCommand(sqlQuery, SqlConnection)
 
             Dim resultado As SqlDataReader = SqlQuerys.ExecuteReader()
 
             If resultado.HasRows Then
-                Dim resultadoAuxiliar As SqlDataReader = resultado
-
-                SqlConnection.Close()
-
-                Return resultadoAuxiliar
+                Return resultado
             Else
                 Return Nothing
             End If
@@ -38,5 +38,9 @@ Public Class DatabaseController
         End Try
 
     End Function
+
+    Public Sub CloseConnection()
+        SqlConnection.Close()
+    End Sub
 
 End Class

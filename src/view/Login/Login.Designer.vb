@@ -85,6 +85,7 @@ Partial Class Login
         Me.TxtContrasenia.Name = "TxtContrasenia"
         Me.TxtContrasenia.Size = New System.Drawing.Size(257, 26)
         Me.TxtContrasenia.TabIndex = 2
+        Me.TxtContrasenia.UseSystemPasswordChar = True
         '
         'Label3
         '

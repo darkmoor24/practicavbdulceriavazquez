@@ -19,7 +19,14 @@
         End If
 
         Try
-            Dim resultadoValidacion As String = LoginController.ValidarCredenciales(TxtNombreUsuario.Text, TxtContrasenia.Text)
+            Dim nombreUsuario As String = TxtNombreUsuario.Text
+
+            Dim contrasenia As String = TxtContrasenia.Text
+
+            Console.WriteLine("Usuario ingresado: " & nombreUsuario)
+            Console.WriteLine("Contraseña ingresada: " & contrasenia)
+
+            Dim resultadoValidacion As String = LoginController.ValidarCredenciales(nombreUsuario, contrasenia)
 
             Select Case resultadoValidacion
                 Case "unknown_user", "wrong_password", "unknown_error"
