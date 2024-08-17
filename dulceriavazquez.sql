@@ -1,9 +1,5 @@
 
-DROP DATABASE IF EXISTS practicadulceriavazquez;
-GO
 
-CREATE DATABASE practicadulceriavazquez;
-GO
 
 USE practicadulceriavazquez;
 GO
@@ -180,6 +176,8 @@ BEGIN
 									   (@Descripcion, @RegimenFiscalProveedor, @FechaEntregaMercancia, @IdContacto);		
 
         -- Confirmar la transacción
+		SELECT * FROM ViewContactos WHERE IdContacto = @IdContacto;
+
         COMMIT TRANSACTION;
 	END TRY
 

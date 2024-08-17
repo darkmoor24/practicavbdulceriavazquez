@@ -288,7 +288,9 @@ Public Class Contactos
 
         Dim nuevoContacto As Contacto = LlenarNuevoContacto()
 
+        Dim contactoRegistrado As Boolean = ContactoController.AddNuevoContacto(nuevoContacto)
 
+        Console.WriteLine(contactoRegistrado)
 
     End Sub
 
@@ -916,11 +918,12 @@ Public Class Contactos
             camposVacios = True
         End If
 
-        If Not RBtnDireccionFiscal.Checked Or Not RBtnDireccionReal.Checked Then
+        If Not RBtnDireccionFiscal.Checked AndAlso Not RBtnDireccionReal.Checked Then
             camposVacios = True
         End If
 
-        If Not CboCategoria.SelectedIndex <> -1 Then
+        If CboCategoria.SelectedIndex = -1 Then
+            Console.WriteLine("cbo cat")
             camposVacios = True
         End If
 
@@ -1007,24 +1010,24 @@ Public Class Contactos
 
                 Dim puesto As String = TxtPuesto.Text
 
-                Dim sueldo As Decimal = TxtSueldo.Text
+                Dim sueldo As Decimal = If(Decimal.TryParse(TxtSueldo.Text, sueldo), sueldo, 0D)
 
                 Dim datosEmpleado As New DatosEmpleado(idDatosEmpleado, curp, puesto, sueldo)
 
-                contacto = New Contacto(idContacto, nombreCompleto, apellidos, direccion, categoria, Nothing, Nothing, usuarioCreador, datosEmpleado, listaNumerosTelefono, listaCorreos)
+                contacto = New Contacto(idContacto, nombreCompleto, apellidos, direccion, categoria, DateTime.Now, DateTime.Now, usuarioCreador, datosEmpleado, listaNumerosTelefono, listaCorreos)
 
             Case "Cliente"
                 Dim idDatosCliente As Integer = 0
 
-                Dim montoCredito As Decimal = TxtMontoCredito.Text
+                Dim montoCredito As Decimal = CType(TxtMontoCredito.Text, Decimal)
 
-                Dim diasCredito As Integer = TxtDiasCredito.Text
+                Dim diasCredito As Integer = CInt(TxtDiasCredito.Text)
 
                 Dim regimenFiscal As String = TxtRegimenFiscalCliente.Text
 
                 Dim datosCliente As New DatosCliente(idDatosCliente, montoCredito, diasCredito, regimenFiscal)
 
-                contacto = New Contacto(idContacto, nombreCompleto, apellidos, direccion, categoria, Nothing, Nothing, usuarioCreador, datosCliente, listaNumerosTelefono, listaCorreos)
+                contacto = New Contacto(idContacto, nombreCompleto, apellidos, direccion, categoria, DateTime.Now, DateTime.Now, usuarioCreador, datosCliente, listaNumerosTelefono, listaCorreos)
 
             Case "Proveedor"
                 Dim idDatosProveedor As Integer = 0
@@ -1037,7 +1040,7 @@ Public Class Contactos
 
                 Dim datosProveedor As New DatosProveedor(idDatosProveedor, descripcion, regimenFiscal, fechaEntregaMercancia)
 
-                contacto = New Contacto(idContacto, nombreCompleto, apellidos, direccion, categoria, Nothing, Nothing, usuarioCreador, datosProveedor, listaNumerosTelefono, listaCorreos)
+                contacto = New Contacto(idContacto, nombreCompleto, apellidos, direccion, categoria, DateTime.Now, DateTime.Now, usuarioCreador, datosProveedor, listaNumerosTelefono, listaCorreos)
 
         End Select
 

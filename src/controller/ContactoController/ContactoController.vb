@@ -21,6 +21,10 @@ Public Class ContactoController
         Dim contactoRegistrado As Boolean = False
 
         Try
+            Dim spParameters As Dictionary(Of String, SqlParameter) = LlenarDiccionarioParametrosInsertarContacto(contacto)
+
+            Dim resultado As SqlDataReader = DatabaseController.ExecuteStoredProcedure("SpInsertarContacto", spParameters)
+
 
         Catch ex As Exception
             Console.WriteLine(ex.Message)
@@ -164,4 +168,65 @@ Public Class ContactoController
         Return contacto
     End Function
 
+
+    Private Function LlenarDiccionarioParametrosInsertarContacto(contacto As Contacto) As Dictionary(Of String, SqlParameter)
+        Dim spParameters As New Dictionary(Of String, SqlParameter) From {
+                {"@Calle", New SqlParameter("@Calle", SqlDbType.NVarChar) With {.Value = contacto.Direccion.Calle}},
+                {"@NumeroExterior", New SqlParameter("@NumeroExterior", SqlDbType.NVarChar) With {.Value = contacto.Direccion.NumeroExterior}},
+                {"@NumeroInterior", New SqlParameter("@NumeroInterior", SqlDbType.NVarChar) With {.Value = contacto.Direccion.NumeroInterior}},
+                {"@Colonia", New SqlParameter("@Colonia", SqlDbType.NVarChar) With {.Value = contacto.Direccion.Colonia}},
+                {"@Localidad", New SqlParameter("@Localidad", SqlDbType.NVarChar) With {.Value = contacto.Direccion.Localidad}},
+                {"@Municipio", New SqlParameter("@Municipio", SqlDbType.NVarChar) With {.Value = contacto.Direccion.Municipio}},
+                {"@Estado", New SqlParameter("@Estado", SqlDbType.NVarChar) With {.Value = contacto.Direccion.Estado}},
+                {"@CodigoPostal", New SqlParameter("@CodigoPostal", SqlDbType.NVarChar) With {.Value = contacto.Direccion.CodigoPostal}},
+                {"@TipoDireccion", New SqlParameter("@TipoDireccion", SqlDbType.NVarChar) With {.Value = contacto.Direccion.Tipo}},
+                {"@NombreCompleto", New SqlParameter("@NombreCompleto", SqlDbType.NVarChar) With {.Value = contacto.NombreCompleto}},
+                {"@Apellidos", New SqlParameter("@Apellidos", SqlDbType.NVarChar) With {.Value = contacto.Apellidos}},
+                {"@IdCategoria", New SqlParameter("@IdCategoria", SqlDbType.NVarChar) With {.Value = contacto.Categoria.IdCategoria}},
+                {"@IdUsuarioCreador", New SqlParameter("@IdUsuarioCreador", SqlDbType.NVarChar) With {.Value = DatosGlobales.UsuarioIngresado.IdUsuario}}
+            }
+
+        If Not String.IsNullOrEmpty(contacto.DatosEmpleado.Curp) Then
+            spParameters.Add("@Curp", New SqlParameter("@Curp", SqlDbType.NVarChar) With {.Value = contacto.DatosEmpleado.Curp})
+        End If
+
+        If Not String.IsNullOrEmpty(contacto.DatosEmpleado.Puesto) Then
+            spParameters.Add("@Puesto", New SqlParameter("@Puesto", SqlDbType.NVarChar) With {.Value = contacto.DatosEmpleado.Puesto})
+        End If
+
+        If contacto.DatosEmpleado.Sueldo <> 0 Then
+            spParameters.Add("@Sueldo", New SqlParameter("@Sueldo", SqlDbType.Decimal) With {.Value = contacto.DatosEmpleado.Sueldo})
+        End If
+
+        ' Parámetros opcionales de DatosCliente
+        If contacto.DatosCliente.MontoCredito <> 0 Then
+            spParameters.Add("@MontoCredito", New SqlParameter("@MontoCredito", SqlDbType.Decimal) With {.Value = contacto.DatosCliente.MontoCredito})
+        End If
+
+        If contacto.DatosCliente.DiasCredito <> 0 Then
+            spParameters.Add("@DiasCredito", New SqlParameter("@DiasCredito", SqlDbType.Int) With {.Value = contacto.DatosCliente.DiasCredito})
+        End If
+
+        If Not String.IsNullOrEmpty(contacto.DatosCliente.RegimenFiscal) Then
+            spParameters.Add("@RegimenFiscalCliente", New SqlParameter("@RegimenFiscalCliente", SqlDbType.NVarChar) With {.Value = contacto.DatosCliente.RegimenFiscal})
+        End If
+
+        ' Parámetros opcionales de DatosProveedor
+        If Not String.IsNullOrEmpty(contacto.DatosProveedor.Descripcion) Then
+            spParameters.Add("@Descripcion", New SqlParameter("@Descripcion", SqlDbType.NVarChar) With {.Value = contacto.DatosProveedor.Descripcion})
+        End If
+
+        If Not String.IsNullOrEmpty(contacto.DatosProveedor.RegimenFiscal) Then
+            spParameters.Add("@RegimenFiscalProveedor", New SqlParameter("@RegimenFiscalProveedor", SqlDbType.NVarChar) With {.Value = contacto.DatosProveedor.RegimenFiscal})
+        End If
+
+        If Not String.IsNullOrEmpty(contacto.DatosProveedor.FechaEntregaMercancia) Then
+            spParameters.Add("@FechaEntregaMercancia", New SqlParameter("@FechaEntregaMercancia", SqlDbType.NVarChar) With {.Value = contacto.DatosProveedor.FechaEntregaMercancia})
+        End If
+
+        ' Parámetro de salida
+        spParameters.Add("@IdContacto", New SqlParameter("@IdContacto", SqlDbType.Int) With {.Direction = ParameterDirection.Output})
+
+        Return spParameters
+    End Function
 End Class
