@@ -17,6 +17,21 @@ Public Class ContactoController
         NumeroTelefonoController = New NumeroTelefonoController()
     End Sub
 
+    Public Function AddNuevoContacto(contacto As Contacto) As Boolean
+        Dim contactoRegistrado As Boolean = False
+
+        Try
+
+        Catch ex As Exception
+            Console.WriteLine(ex.Message)
+
+            contactoRegistrado = False
+        End Try
+
+        Return contactoRegistrado
+
+    End Function
+
     Public Function GetContactosByIdUsuario(idUsuario As Integer)
         Try
             Dim contactos As New ArrayList()

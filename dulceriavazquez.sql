@@ -1,5 +1,3 @@
-use master;
-go
 
 DROP DATABASE IF EXISTS practicadulceriavazquez;
 GO
@@ -118,40 +116,79 @@ FROM
 	LEFT JOIN DatosProveedor dp ON c.IdContacto = dp.IdContacto;
 GO
 
-CREATE PROCEDURE
-
 CREATE PROCEDURE SpInsertarContacto
-    @NombreCompleto NVARCHAR(255),
-    @Apellidos NVARCHAR(255),
-    @IdDireccion INT,
-    @IdCategoria INT,
-    @IdUsuarioCreador INT,
-    @FechaRegistro DATETIME = NULL,
-    @IdContacto INT OUTPUT
+	@Calle NVARCHAR(100),
+	@NumeroExterior	NVARCHAR(10),
+	@NumeroInterior	NVARCHAR(10),
+	@Colonia	NVARCHAR(100),
+	@Localidad	NVARCHAR(100),
+	@Municipio	NVARCHAR(100),
+	@Estado	NVARCHAR(100),
+	@CodigoPostal	NVARCHAR(10),
+	@TipoDireccion	NVARCHAR(50),
+	@NombreCompleto	NVARCHAR(255),
+	@Apellidos	NVARCHAR(255),
+	@IdCategoria	INT,
+	@IdUsuarioCreador	INT,
+	-- Empleado
+	@IdDatosEmpleado INT = 0,
+	@Curp NVARCHAR(18) = NULL,
+	@Puesto NVARCHAR(90) = NULL,
+	@Sueldo DECIMAL(18, 2) = 0,
+	-- Cliente
+	@IdDatosCliente INT = 0,
+	@MontoCredito DECIMAL(18, 0) = 0,
+	@DiasCredito INT = 0,
+	@RegimenFiscalCliente NVARCHAR(90) = NULL,
+	-- Proveedor
+	@IdDatosProveedor INT = 0,
+	@Descripcion NVARCHAR(255) = NULL,
+	@RegimenFiscalProveedor NVARCHAR(90) = NULL,
+	@FechaEntregaMercancia NVARCHAR(90) = NULL,
+	@IdContacto INT OUTPUT
 AS
 BEGIN
-    -- Iniciar la transacción
-    BEGIN TRANSACTION;
+	DECLARE @IdDireccion INT;
 
-    BEGIN TRY
-        -- Insertar en la tabla Contacto
-        INSERT INTO Contacto (NombreCompleto, Apellidos, IdDireccion, IdCategoria, FechaRegistro, FechaModificacion, IdUsuarioCreador)
-        VALUES (@NombreCompleto, @Apellidos, @IdDireccion, @IdCategoria, ISNULL(@FechaRegistro, GETDATE()), NULL, @IdUsuarioCreador);
+	BEGIN TRANSACTION;
 
-        -- Obtener el ID del nuevo contacto
+	BEGIN TRY
+		INSERT INTO Direccion (Calle, NumeroExterior, NumeroInterior, Colonia, Localidad, Municipio, Estado, CodigoPostal, Tipo) VALUES 
+							  (@Calle, @NumeroExterior, @NumeroInterior, @Colonia, @Localidad, @Municipio, @Estado, @CodigoPostal, @TipoDireccion);
+
+		SET @IdDireccion = SCOPE_IDENTITY();
+
+		INSERT INTO Contacto (NombreCompleto, Apellidos, IdDireccion, IdCategoria, IdUsuarioCreador) VALUES 
+							 (@NombreCompleto, @Apellidos, @IdDireccion, @IdCategoria, @IdUsuarioCreador);
+
+		-- Obtener el ID del nuevo contacto
         SET @IdContacto = SCOPE_IDENTITY();
+
+		-- Empleado
+		IF @IdCategoria = 1
+			INSERT INTO DatosEmpleado (Curp, Puesto, Sueldo, IdContacto) VALUES 
+									  (@Curp, @Puesto, @Sueldo, @IdContacto);
+
+		-- Cliente
+		ELSE IF @IdCategoria = 2
+			INSERT INTO DatosCliente (MontoCredito, DiasCredito, RegimenFiscal, IdContacto) VALUES 
+									 (@MontoCredito, @DiasCredito, @RegimenFiscalCliente, @IdContacto);
+
+		--Proveedor
+		ELSE IF @IdCategoria = 3
+			INSERT INTO DatosProveedor (Descripcion, RegimenFiscal, FechaEntregaMercancia, IdContacto) VALUES 
+									   (@Descripcion, @RegimenFiscalProveedor, @FechaEntregaMercancia, @IdContacto);		
 
         -- Confirmar la transacción
         COMMIT TRANSACTION;
-    END TRY
-    BEGIN CATCH
-        -- Deshacer la transacción en caso de error
+	END TRY
+
+	BEGIN CATCH
         ROLLBACK TRANSACTION;
 
-        -- Lanzar el error para que pueda ser manejado por el llamado
         THROW;
-    END CATCH
-END;
+	END CATCH
+END
 GO
 
 CREATE PROCEDURE SpInsertarNumeroTelefono

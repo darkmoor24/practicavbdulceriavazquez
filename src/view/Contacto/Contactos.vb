@@ -278,6 +278,17 @@ Public Class Contactos
             Exit Sub
         End If
 
+        Dim camposVacios As Boolean = ValidarCamposVacios()
+
+        If camposVacios Then
+            MessageBox.Show("Por favor, llena todos los campos.")
+
+            Exit Sub
+        End If
+
+        Dim nuevoContacto As Contacto = LlenarNuevoContacto()
+
+
 
     End Sub
 
@@ -881,12 +892,155 @@ Public Class Contactos
         DTCorreos.ScrollBars = ScrollBars.Vertical
     End Sub
 
-    Public Function EsCorreoValido(correo As String) As Boolean
+    Private Function EsCorreoValido(correo As String) As Boolean
 
         Dim patronCorreo As String = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 
         Dim regex As New Regex(patronCorreo)
 
         Return regex.IsMatch(correo)
+    End Function
+
+    Private Function ValidarCamposVacios() As Boolean
+        Dim camposVacios As Boolean = False
+
+        If TxtCalle.Text = "" OrElse
+           TxtLocalidad.Text = "" OrElse
+           TxtNumeroExterior.Text = "" OrElse
+           TxtMunicipio.Text = "" OrElse
+           TxtColonia.Text = "" OrElse
+           TxtEstado.Text = "" OrElse
+           TxtCodigoPostal.Text = "" OrElse
+           TxtNombreCompleto.Text = "" OrElse
+           TxtApellidos.Text = "" Then
+            camposVacios = True
+        End If
+
+        If Not RBtnDireccionFiscal.Checked Or Not RBtnDireccionReal.Checked Then
+            camposVacios = True
+        End If
+
+        If Not CboCategoria.SelectedIndex <> -1 Then
+            camposVacios = True
+        End If
+
+        If TxtCurp.Enabled AndAlso TxtCurp.Text = "" Then
+            camposVacios = True
+        End If
+
+        If TxtPuesto.Enabled AndAlso TxtPuesto.Text = "" Then
+            camposVacios = True
+        End If
+
+        If TxtSueldo.Enabled AndAlso TxtSueldo.Text = "" Then
+            camposVacios = True
+        End If
+
+        If TxtMontoCredito.Enabled AndAlso TxtMontoCredito.Text = "" Then
+            camposVacios = True
+        End If
+
+        If TxtDiasCredito.Enabled AndAlso TxtDiasCredito.Text = "" Then
+            camposVacios = True
+        End If
+
+        If TxtRegimenFiscalCliente.Enabled AndAlso TxtRegimenFiscalCliente.Text = "" Then
+            camposVacios = True
+        End If
+
+        If TxtRegimenFiscalProveedor.Enabled AndAlso TxtRegimenFiscalProveedor.Text = "" Then
+            camposVacios = True
+        End If
+
+        If TxtFechaEntregaMercancia.Enabled AndAlso TxtFechaEntregaMercancia.Text = "" Then
+            camposVacios = True
+        End If
+
+        If TxtDescripcion.Enabled AndAlso TxtDescripcion.Text = "" Then
+            camposVacios = True
+        End If
+
+        Return camposVacios
+
+    End Function
+
+    Private Function LlenarNuevoContacto()
+        Dim contacto As New Contacto()
+
+        'Datos de contacto
+        Dim idContacto As Integer = 0
+
+        Dim idDireccion As Integer = 0
+
+        Dim nombreCategoria As String = CboCategoria.SelectedItem
+
+        Dim idCategoria As Integer
+
+        For Each categ As Categoria In categoriasContacto
+            If categ.Nombre = nombreCategoria Then
+                idCategoria = categ.IdCategoria
+            End If
+        Next
+
+        Dim nombreCompleto As String = TxtNombreCompleto.Text
+
+        Dim apellidos As String = TxtApellidos.Text
+
+        'Llenado de Objetos Inherentes
+        Dim direccion As New Direccion(idDireccion, TxtCalle.Text, TxtNumeroInterior.Text, TxtNumeroExterior.Text, TxtColonia.Text, TxtLocalidad.Text, TxtMunicipio.Text, TxtEstado.Text, TxtCodigoPostal.Text, If(RBtnDireccionFiscal.Checked, "Fiscal", "Real"))
+
+        Dim categoria As New Categoria(idCategoria, nombreCategoria)
+
+        Dim usuarioCreador As Usuario = DatosGlobales.UsuarioIngresado
+
+        'Llenado de arreglos de correos y números de teléfono
+        Dim listaCorreos As New ArrayList()
+
+        Dim listaNumerosTelefono As New ArrayList()
+
+        'Llenado de objetos opcionales
+        Select Case categoria.Nombre
+            Case "Empleado"
+                Dim idDatosEmpleado As Integer = 0
+
+                Dim curp As String = TxtCurp.Text
+
+                Dim puesto As String = TxtPuesto.Text
+
+                Dim sueldo As Decimal = TxtSueldo.Text
+
+                Dim datosEmpleado As New DatosEmpleado(idDatosEmpleado, curp, puesto, sueldo)
+
+                contacto = New Contacto(idContacto, nombreCompleto, apellidos, direccion, categoria, Nothing, Nothing, usuarioCreador, datosEmpleado, listaNumerosTelefono, listaCorreos)
+
+            Case "Cliente"
+                Dim idDatosCliente As Integer = 0
+
+                Dim montoCredito As Decimal = TxtMontoCredito.Text
+
+                Dim diasCredito As Integer = TxtDiasCredito.Text
+
+                Dim regimenFiscal As String = TxtRegimenFiscalCliente.Text
+
+                Dim datosCliente As New DatosCliente(idDatosCliente, montoCredito, diasCredito, regimenFiscal)
+
+                contacto = New Contacto(idContacto, nombreCompleto, apellidos, direccion, categoria, Nothing, Nothing, usuarioCreador, datosCliente, listaNumerosTelefono, listaCorreos)
+
+            Case "Proveedor"
+                Dim idDatosProveedor As Integer = 0
+
+                Dim descripcion As String = TxtDescripcion.Text
+
+                Dim fechaEntregaMercancia As String = TxtFechaEntregaMercancia.Text
+
+                Dim regimenFiscal As String = TxtRegimenFiscalProveedor.Text
+
+                Dim datosProveedor As New DatosProveedor(idDatosProveedor, descripcion, regimenFiscal, fechaEntregaMercancia)
+
+                contacto = New Contacto(idContacto, nombreCompleto, apellidos, direccion, categoria, Nothing, Nothing, usuarioCreador, datosProveedor, listaNumerosTelefono, listaCorreos)
+
+        End Select
+
+        Return contacto
     End Function
 End Class
