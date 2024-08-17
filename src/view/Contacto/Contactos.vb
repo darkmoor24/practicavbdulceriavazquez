@@ -668,6 +668,8 @@ Public Class Contactos
 
         tiposTelefono = New ArrayList() From {"Casa", "Celular", "WhatsApp", "Emergencia"}
 
+        LblBienvenida.Text = $"¡Hola, { DatosGlobales.UsuarioIngresado.NombreUsuario }! Bienvenido(a) a tu Agenda de Contactos"
+
         LlenarDatosEstaticosFormulario()
     End Sub
 

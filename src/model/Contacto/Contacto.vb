@@ -31,7 +31,7 @@
         _UsuarioCreador = usuarioCreador
     End Sub
 
-    Public Sub New(idContacto As Integer, nombreCompleto As String, apellidos As String, direccion As Direccion, categoria As Categoria, fechaRegistro As DateTime, fechaModificacion As DateTime, usuarioCreador As Usuario, datosCliente As DatosCliente, listaNumerosTelefono As ArrayList, listaCorreos As ArrayList)
+    Public Sub New(idContacto As Integer, nombreCompleto As String, apellidos As String, direccion As Direccion, categoria As Categoria, fechaRegistro? As DateTime, fechaModificacion? As DateTime, usuarioCreador As Usuario, datosCliente As DatosCliente, listaNumerosTelefono As ArrayList, listaCorreos As ArrayList)
         _IdContacto = idContacto
         _NombreCompleto = nombreCompleto
         _Apellidos = apellidos
@@ -47,7 +47,7 @@
         _ListaCorreos = listaCorreos
     End Sub
 
-    Public Sub New(idContacto As Integer, nombreCompleto As String, apellidos As String, direccion As Direccion, categoria As Categoria, fechaRegistro As DateTime, fechaModificacion As DateTime, usuarioCreador As Usuario, datosEmpleado As DatosEmpleado, listaNumerosTelefono As ArrayList, listaCorreos As ArrayList)
+    Public Sub New(idContacto As Integer, nombreCompleto As String, apellidos As String, direccion As Direccion, categoria As Categoria, fechaRegistro? As DateTime, fechaModificacion? As DateTime, usuarioCreador As Usuario, datosEmpleado As DatosEmpleado, listaNumerosTelefono As ArrayList, listaCorreos As ArrayList)
         _IdContacto = idContacto
         _NombreCompleto = nombreCompleto
         _Apellidos = apellidos
@@ -63,7 +63,7 @@
         _ListaCorreos = listaCorreos
     End Sub
 
-    Public Sub New(idContacto As Integer, nombreCompleto As String, apellidos As String, direccion As Direccion, categoria As Categoria, fechaRegistro As DateTime, fechaModificacion As DateTime, usuarioCreador As Usuario, datosProveedor As DatosProveedor, listaNumerosTelefono As ArrayList, listaCorreos As ArrayList)
+    Public Sub New(idContacto As Integer, nombreCompleto As String, apellidos As String, direccion As Direccion, categoria As Categoria, fechaRegistro? As DateTime, fechaModificacion? As DateTime, usuarioCreador As Usuario, datosProveedor As DatosProveedor, listaNumerosTelefono As ArrayList, listaCorreos As ArrayList)
         _IdContacto = idContacto
         _NombreCompleto = nombreCompleto
         _Apellidos = apellidos

@@ -118,6 +118,8 @@ FROM
 	LEFT JOIN DatosProveedor dp ON c.IdContacto = dp.IdContacto;
 GO
 
+CREATE PROCEDURE
+
 CREATE PROCEDURE SpInsertarContacto
     @NombreCompleto NVARCHAR(255),
     @Apellidos NVARCHAR(255),

@@ -48,7 +48,7 @@ Partial Class Contactos
         Me.Descripcion = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.RegimenFiscalProveedor = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.FechaEntregaMercancia = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Label1 = New System.Windows.Forms.Label()
+        Me.LblBienvenida = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Label4 = New System.Windows.Forms.Label()
@@ -260,15 +260,14 @@ Partial Class Contactos
         Me.FechaEntregaMercancia.HeaderText = "Fecha de entrega de mercancía"
         Me.FechaEntregaMercancia.Name = "FechaEntregaMercancia"
         '
-        'Label1
+        'LblBienvenida
         '
-        Me.Label1.AutoSize = True
-        Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 13.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.Location = New System.Drawing.Point(7, 9)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(372, 22)
-        Me.Label1.TabIndex = 1
-        Me.Label1.Text = "Bienvenido(a) a tu Agenda de Contactos"
+        Me.LblBienvenida.AutoSize = True
+        Me.LblBienvenida.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LblBienvenida.Location = New System.Drawing.Point(7, 9)
+        Me.LblBienvenida.Name = "LblBienvenida"
+        Me.LblBienvenida.Size = New System.Drawing.Size(0, 18)
+        Me.LblBienvenida.TabIndex = 1
         '
         'Label2
         '
@@ -1098,7 +1097,7 @@ Partial Class Contactos
         Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.Label2)
-        Me.Controls.Add(Me.Label1)
+        Me.Controls.Add(Me.LblBienvenida)
         Me.Controls.Add(Me.DTContactos)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
@@ -1116,7 +1115,7 @@ Partial Class Contactos
     End Sub
 
     Friend WithEvents DTContactos As DataGridView
-    Friend WithEvents Label1 As Label
+    Friend WithEvents LblBienvenida As Label
     Friend WithEvents Label2 As Label
     Friend WithEvents Label3 As Label
     Friend WithEvents Label4 As Label
